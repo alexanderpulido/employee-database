@@ -18,7 +18,7 @@ int read_employees(int fd, struct dbheader_t *dbhdr, struct employee_t **employe
         return STATUS_ERROR;
     }
     struct employee_t* employee = calloc(1, sizeof(struct employee_t));
-    if (employee == NULL)
+    if (employee == -1)
     {
         printf("Malloc failed to create a db header!\n");
         return STATUS_ERROR;
@@ -67,7 +67,7 @@ int validate_db_header(int fd, struct dbheader_t **headerOut)
         return STATUS_ERROR;
     }
     struct dbheader_t* header = calloc(1, sizeof(struct dbheader_t));
-    if (header == NULL)
+    if (header == -1)
     {
         printf("Malloc failed to create a db header!\n");
         return STATUS_ERROR;
@@ -115,10 +115,10 @@ int validate_db_header(int fd, struct dbheader_t **headerOut)
     return STATUS_SUCCESS;
 }
 
-int create_db_header(int fd, struct dbheader_t **headerOut) 
+int create_db_header(struct dbheader_t **headerOut) 
 {
 	struct dbheader_t* header = calloc(1, sizeof(struct dbheader_t));
-    if (header == NULL)
+    if (header == -1)
     {
         printf("Malloc failed to allocate header!\n");
         return STATUS_ERROR;
