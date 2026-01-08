@@ -22,6 +22,25 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t *employees, char *a
 
 int read_employees(int fd, struct dbheader_t *dbhdr, struct employee_t **employeesOut) 
 {
+    if (fd < 0)
+    {
+        printf("Got bad fd from the user\n");
+        return STATUS_ERROR;
+    }
+    struct employee_t* employee = calloc(1, sizeof(struct employee_t));
+    if (employee == NULL)
+    {
+        printf("Malloc failed to create a db header!\n");
+        return STATUS_ERROR;
+    }
+    if (read(fd, employee, sizeof(struct employee_t)) != sizeof(struct employee_t))
+    {
+        perror("read");
+        free(employee);
+        return STATUS_ERROR;
+    }
+
+    *employeesOut = employee;
 
 }
 
