@@ -12,6 +12,8 @@ void print_usage(char *argv[])
     printf("Usage: %s -n -f <database file>\n", argv[0]);
     printf("\t -n - create new database file\n");
     printf("\t -f - (required) path to database file\n");
+    printf("\t -l - list employees\n");
+    printf("\t -a - add via CSV list of (name, address, hours)\n");
 
     return;
 }
@@ -20,6 +22,7 @@ int main(int argc, char *argv[])
 { 
     bool newfile = false;
     char* filepath = NULL;
+    char* addstring = NULL;
 	int c;
 
     int dbfd = -1;
@@ -28,7 +31,7 @@ int main(int argc, char *argv[])
 
     // first flag -n is the boolean flag, and -f is the filename flag for filename string
     // a colon after the flag f means it takes a string
-    while ((c = getopt(argc, argv, "nf:")) != -1) 
+    while ((c = getopt(argc, argv, "nf:a:")) != -1) 
     {
         switch(c)
         {
@@ -38,6 +41,10 @@ int main(int argc, char *argv[])
 
             case 'f':
                 filepath = optarg;  // optarg gets the pointer for the argument that getopt tracked, in this case the pointer to the myfile.db file
+                break;
+                
+            case 'a':
+                addstring = optarg;
                 break;
 
             case '?':
@@ -85,6 +92,17 @@ int main(int argc, char *argv[])
             printf("Failed to validate database header\n");
             return STATUS_ERROR;
         }
+    }
+    
+    if (read_employees(dbfd, dbhdr, &employees) != STATUS_SUCCESS)
+    {
+        printf("Failed to read employees!\n");
+        return 0;
+    }
+    
+    if (addstring)
+    {
+        add_employee(dbhdr, &employees, addstring);
     }
 
     output_file(dbfd, dbhdr, employees);
