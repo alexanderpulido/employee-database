@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     bool newfile = false;
     char* filepath = NULL;
     char* addstring = NULL;
+    bool list = false;
 	int c;
 
     int dbfd = -1;
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
 
     // first flag -n is the boolean flag, and -f is the filename flag for filename string
     // a colon after the flag f means it takes a string
-    while ((c = getopt(argc, argv, "nf:a:")) != -1) 
+    while ((c = getopt(argc, argv, "nf:a:l")) != -1) 
     {
         switch(c)
         {
@@ -45,6 +46,10 @@ int main(int argc, char *argv[])
                 
             case 'a':
                 addstring = optarg;
+                break;
+
+            case 'l':
+                list = true;
                 break;
 
             case '?':
@@ -103,6 +108,11 @@ int main(int argc, char *argv[])
     if (addstring)
     {
         add_employee(dbhdr, &employees, addstring);
+    }
+
+    if (list)
+    {
+        list_employees(dbhdr, employees);
     }
 
     output_file(dbfd, dbhdr, employees);
